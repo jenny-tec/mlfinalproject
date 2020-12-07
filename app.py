@@ -26,9 +26,9 @@ from flask import Flask, request, render_template
 
 
 
-model = load_model("model/network.h5") 
+model = load_model("network.h5") 
 # loading
-with open('model/tokenizer.pickle', 'rb') as handle:
+with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
 
 label2int = {'0': 0, '1': 1}
