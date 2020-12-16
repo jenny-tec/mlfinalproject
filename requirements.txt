@@ -1,4 +1,4 @@
-keras
+
 tensorflow
 # get that GPU speed!
 # tensorflow-gpu
