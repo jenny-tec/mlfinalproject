@@ -23,10 +23,11 @@ from keras.preprocessing.sequence import pad_sequences
 from keras.preprocessing.text import Tokenizer
 from keras.models import load_model 
 from flask import Flask, request, render_template
+import streamlit as st
 
 
 
-model = load_model("network.h5") 
+model = load_model("mlfinalmodel.h5") 
 # loading
 with open('tokenizer.pickle', 'rb') as handle:
     tokenizer = pickle.load(handle)
@@ -58,45 +59,24 @@ def get_predictions(text):
     return int2label[np.argmax(prediction)]
 
 
-def show_predict(email_text):
-    prediction = get_predictions(email_text)
-    email_type = ""
-    if(prediction == '1'):
-        email_type = "The prediction is "+str(prediction)+" It is a Spam"
+st.title("Detec whether you are depressed or not using your social media posts")
+	# st.subheader("ML App with Streamlit")
+html_temp = """
+	<div style="background-color:blue;padding:10px">
+	<h1 style="color:white;text-align:center;">Depression Detection App </h1>
+	</div>
+	"""
+st.markdown(html_temp,unsafe_allow_html=True)
+
+# Get user input
+user_input =st.text_input("TYPE YOUR POST BELOW","Enter your post")
+user_input=[user_input]
+user_input=tokenizer.texts_to_sequences(user_input)
+user_sequence = pad_sequences(user_input)
+user_prediction =model.predict(user_sequence)
+
+if st.button("Predict"):
+    if np.around(user_prediction, decimals=0)[0][0] == 1.0:
+        st.write('You are depressed.Please visit the counselor')
     else:
-        email_type = "The prediction is "+str(prediction)+" It is not a Spam"
-    
-    return email_type
-
-
-
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return render_template('main.html')
-
-
-@app.route('/predict', methods=['GET', 'POST'])
-def predict():
-  
-
-    data = request.form.get('email_text')
-    prediction = ""
-    if data == None:
-        prediction = 'Got None'
-    else:
-        # model.predict.predict returns a dictionarys
-        prediction = show_predict(data)
-    # return json.dumps(str(prediction))
-
-    return render_template('main.html',  original_input={
-            "email_text":data,}, 
-        
-        prediction=prediction)
-
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
+        st.write("You are not depressed")
