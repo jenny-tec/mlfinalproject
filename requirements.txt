@@ -1,4 +1,4 @@
-keras
+
 tensorflow
 # get that GPU speed!
 # tensorflow-gpu
@@ -86,4 +86,6 @@ wcwidth==0.1.8
 webencodings==0.5.1
 widgetsnbextension==3.5.1
 zipp==3.0.0
+
+
 
